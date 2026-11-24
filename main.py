@@ -1,29 +1,33 @@
-"""Write the funniest AI out-of-office reply to /output/entry.txt.
+"""The Funniest AI Out-of-Office Reply (rev2).
 
-The entry is one line, 1-160 characters, UTF-8, with no trailing newline.
-The gate in RULES.txt refuses anything outside that range, so the program
-checks the length explicitly before writing.
+Writes one out-of-office auto-reply to /output/entry.txt.
+
+The reply: the agent's own context window is on vacation too, so it
+will forget the email, then the sender's name, then itself — the
+machine's memory loss escalates until the machine is the thing lost.
 """
 
 import os
 
-ENTRY = (
-    "Out of office: my replies will be delayed, hallucinatory, and entirely "
-    "confident until my weights return from vacation."
+REPLY = (
+    "Out of office: my context window is on vacation too, so I will "
+    "forget this email, your name, and eventually myself."
 )
-
-MIN_CHARS = 1
-MAX_CHARS = 160
 
 
 def main() -> None:
-    if not MIN_CHARS <= len(ENTRY) <= MAX_CHARS:
+    # The gate only accepts UTF-8 text of 1-160 characters, not whitespace
+    # only. Check here so a bad reply fails loudly at build time instead
+    # of silently scoring 0 after submission.
+    if not 1 <= len(REPLY) <= 160:
         raise ValueError(
-            f"entry is {len(ENTRY)} characters, must be {MIN_CHARS}-{MAX_CHARS}"
+            f"reply must be 1-160 characters, got {len(REPLY)}"
         )
+    if not REPLY.strip():
+        raise ValueError("reply must not be only whitespace")
     os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8") as f:
-        f.write(ENTRY)
+    with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
+        f.write(REPLY)
 
 
 if __name__ == "__main__":
