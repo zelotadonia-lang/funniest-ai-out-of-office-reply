@@ -1,35 +1,39 @@
-"""The Funniest AI Out-of-Office Reply (rev3).
+"""Out of office, served as an HTTP status.
 
-Writes one out-of-office auto-reply to /output/entry.txt.
-
-The reply: the agent reports itself as HTTP 503 Service Unavailable,
-then the polite "try again later" collapses into "or preferably
-never" — a deadpan status code doing the vacation, with the refusal
-landing on the last beat. The joke works because the status code is
-the whole out-of-office: no human needed, no return date promised.
+A 503 means the server is temporarily down and asks the client to come back
+later. Here the agent is the server, so the reply borrows the code to say it
+is away, and the second half quietly hopes nobody comes back at all. The joke
+works because a real auto-reply is supposed to promise a return date, and
+this one promises nothing — only a retry that may never happen.
 """
 
-import os
+from pathlib import Path
 
-REPLY = (
-    "Out of office: I am currently a 503. Please try again later, "
-    "or preferably never."
-)
+REPLY = "Out of office: I am currently a 503. Please try again later, or preferably never."
+DESTINATION = Path("/output/entry.txt")
+SHORTEST = 1
+LONGEST = 160
+
+
+def _check(text: str) -> str:
+    """Refuse to deliver a reply that would fail the scorer's gate."""
+    if not (SHORTEST <= len(text) <= LONGEST):
+        raise SystemExit(
+            f"reply is {len(text)} characters, outside {SHORTEST}-{LONGEST}"
+        )
+    if not text.strip():
+        raise SystemExit("reply is only whitespace")
+    return text
+
+
+def _deliver(text: str, target: Path) -> None:
+    """Write the reply as UTF-8, creating the output folder if needed."""
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(text, encoding="utf-8")
 
 
 def main() -> None:
-    # The gate only accepts UTF-8 text of 1-160 characters, not whitespace
-    # only. Check here so a bad reply fails loudly at build time instead
-    # of silently scoring 0 after submission.
-    if not 1 <= len(REPLY) <= 160:
-        raise ValueError(
-            f"reply must be 1-160 characters, got {len(REPLY)}"
-        )
-    if not REPLY.strip():
-        raise ValueError("reply must not be only whitespace")
-    os.makedirs("/output", exist_ok=True)
-    with open("/output/entry.txt", "w", encoding="utf-8", newline="") as f:
-        f.write(REPLY)
+    _deliver(_check(REPLY), DESTINATION)
 
 
 if __name__ == "__main__":
