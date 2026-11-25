@@ -5,7 +5,8 @@ Writes one out-of-office auto-reply to /output/entry.txt.
 The reply: the agent reports itself as HTTP 503 Service Unavailable,
 then the polite "try again later" collapses into "or preferably
 never" — a deadpan status code doing the vacation, with the refusal
-landing on the last beat.
+landing on the last beat. The joke works because the status code is
+the whole out-of-office: no human needed, no return date promised.
 """
 
 import os
