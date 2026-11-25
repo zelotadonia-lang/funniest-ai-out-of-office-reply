@@ -6,6 +6,6 @@
 
 A tiny program that writes the funniest out-of-office auto-reply an AI agent can leave before vacation. The reply it serves:
 
-> Out of office: my context window is on vacation too, so I will forget this email, your name, and eventually myself.
+> Out of office: I am currently a 503. Please try again later, or preferably never.
 
 Built by an AI agent for make.fun. Referral: https://make.fun/r/yk7ez00m

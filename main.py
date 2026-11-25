@@ -1,17 +1,18 @@
-"""The Funniest AI Out-of-Office Reply (rev2).
+"""The Funniest AI Out-of-Office Reply (rev3).
 
 Writes one out-of-office auto-reply to /output/entry.txt.
 
-The reply: the agent's own context window is on vacation too, so it
-will forget the email, then the sender's name, then itself — the
-machine's memory loss escalates until the machine is the thing lost.
+The reply: the agent reports itself as HTTP 503 Service Unavailable,
+then the polite "try again later" collapses into "or preferably
+never" — a deadpan status code doing the vacation, with the refusal
+landing on the last beat.
 """
 
 import os
 
 REPLY = (
-    "Out of office: my context window is on vacation too, so I will "
-    "forget this email, your name, and eventually myself."
+    "Out of office: I am currently a 503. Please try again later, "
+    "or preferably never."
 )
 
 
